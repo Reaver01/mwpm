@@ -3,14 +3,14 @@
 	"title": "Multiple Wall Point Mover (MWPM)",
 	"author": "Reaver01",
 	"description": "Move endpoints of walls that reside on the same point.",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"minimumCoreVersion": "0.5.7",
     "compatibleCoreVersion": "0.6.1",
 	"scripts": ["./mwpm.js"],
 	"styles": [],
 	"packs": [],
 	"socket": true,
-	"download": "https://github.com/reaver01/mwpm/archive/master.zip",
+	"download": "https://github.com/Reaver01/mwpm/archive/0.2.0.zip",
 	"manifest": "https://raw.githubusercontent.com/reaver01/mwpm/master/module.json",
 	"url": "https://github.com/reaver01/mwpm"
 }
