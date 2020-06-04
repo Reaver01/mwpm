@@ -1,4 +1,4 @@
-const HexAssist = (() => {
+const MWPM = (() => {
     let updateRunning = false;
     let pressedKeys = {};
     window.onkeyup = function (e) {
@@ -8,7 +8,7 @@ const HexAssist = (() => {
         pressedKeys[e.keyCode] = true;
     };
     const hookOnpreUpdateWall = async function (scene, wall, update) {
-        if (update.hasOwnProperty("c") && pressedKeys[16]) {
+        if (update.hasOwnProperty("c") && pressedKeys[18]) {
             updateRunning = true;
             let endpoint = [];
             let newEndpoint = [];
