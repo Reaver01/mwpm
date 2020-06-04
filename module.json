@@ -10,7 +10,7 @@
 	"styles": [],
 	"packs": [],
 	"socket": true,
-	"download": "https://github.com/Reaver01/mwpm/archive/0.3.0.zip",
+	"download": "https://github.com/Reaver01/mwpm/archive/master.zip",
 	"manifest": "https://raw.githubusercontent.com/reaver01/mwpm/master/module.json",
 	"url": "https://github.com/reaver01/mwpm"
 }
