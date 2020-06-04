@@ -26,7 +26,6 @@ const MWPM = (() => {
             }
             let offset = game.settings.get("mwpm", "offset");
             let smallWalls = scene.data.walls.filter(w => (offset > 0 && w.c[0] > endpoint[0] - offset && w.c[0] < endpoint[0] + offset && w.c[1] > endpoint[1] - offset && w.c[1] < endpoint[1] + offset) && (offset > 0 && w.c[2] > endpoint[0] - offset && w.c[2] < endpoint[0] + offset && w.c[3] > endpoint[1] - offset && w.c[3] < endpoint[1] + offset));
-            console.log(smallWalls);
             if (smallWalls.length > 0 && game.settings.get("mwpm", "delete")) {
                 deleteUpdates = [];
                 smallWalls.forEach(small => {
