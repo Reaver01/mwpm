@@ -8,3 +8,4 @@ Just hold alt while you let go of an endpoint you've grabbed, and any other endp
 - Key Code: Numerical key code to be used. You can use something like https://keycode.info/ to find the code.
 - Pixel Offset: Number of pixels to use as an offset if you want to also be able to grab walls endpoints that are close by.
 - Delete small walls: If both wall endpoints fall within the Pixel Offset, delete the wall instead of grabbing one endpoint.
+- Drag Resistance: Number of pixels you have to move your mouse on an endpoint before it registers as a drag (0 means default).
