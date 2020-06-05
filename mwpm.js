@@ -9,7 +9,10 @@ const MWPM = (() => {
     window.onkeydown = function(e) {
         pressedKeys[e.keyCode] = true;
     };
-    // Hook function
+    // Hook functions
+    const hookOnHoverWall = async function (wall, hover) {
+        wall.mouseInteractionManager.options.dragResistance = game.settings.get("mwpm", "resistance") || null;
+    }
     const hookOnpreUpdateWall = async function(scene, wall, update) {
         // Retrieve settings
         const reverse = game.settings.get("mwpm", "reverse");
@@ -69,7 +72,10 @@ const MWPM = (() => {
     };
 
     // Hooks
-    Hooks.on("ready", async function() {
+    Hooks.on("ready", async function () {
+        Hooks.on("hoverWall", async (wall, hover) => {
+            await hookOnHoverWall(wall, hover);
+        });
         Hooks.on("preUpdateWall", async (scene, wall, update) => {
             // Don't fire hook function if an update is already happening
             if (!updating) {
@@ -99,6 +105,14 @@ const MWPM = (() => {
         game.settings.register("mwpm", "offset", {
             name: "Pixel Offset",
             hint: "Number of pixels to use as an offset if you want to also be able to grab walls endpoints that are close by.",
+            scope: "world",
+            config: true,
+            default: 0,
+            type: Number
+        });
+        game.settings.register("mwpm", "resistance", {
+            name: "Drag Resistance",
+            hint: "Number of pixels you have to move your mouse on an endpoint before it registers as a drag (0 means default).",
             scope: "world",
             config: true,
             default: 0,
