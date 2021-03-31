@@ -13,7 +13,8 @@ const MWPM = (() => {
     const hookOnHoverWall = async function (wall, hover) {
         wall.mouseInteractionManager.options.dragResistance = game.settings.get("mwpm", "resistance") || null;
     }
-    const hookOnpreUpdateWall = async function(scene, wall, update) {
+    const hookOnpreUpdateWall = async function(wall, update) {
+        let scene = wall.parent;
         // Retrieve settings
         const reverse = game.settings.get("mwpm", "reverse");
         const key = game.settings.get("mwpm", "key");
@@ -22,7 +23,7 @@ const MWPM = (() => {
         const coordUpdate = update.hasOwnProperty("c");
         if ((!reverse && coordUpdate && pressedKeys[key]) || (reverse && coordUpdate && !pressedKeys[key])) {
             // Cancel if both endpoints are being moved at the same time
-            if ((wall.c[0] !== update.c[0] || wall.c[1] !== update.c[1]) && (wall.c[2] !== update.c[2] || wall.c[3] !== update.c[3])) {
+            if ((wall.data.c[0] !== update.c[0] || wall.data.c[1] !== update.c[1]) && (wall.data.c[2] !== update.c[2] || wall.data.c[3] !== update.c[3])) {
                 return;
             }
             // Set updating variable
@@ -30,16 +31,16 @@ const MWPM = (() => {
             // Check if update resides in the first or second half of the coordinates array and set endpoint variables
             let endpoint = [];
             let newEndpoint = [];
-            if (wall.c[0] !== update.c[0] || wall.c[1] !== update.c[1]) {
-                endpoint = [wall.c[0], wall.c[1]];
+            if (wall.data.c[0] !== update.c[0] || wall.data.c[1] !== update.c[1]) {
+                endpoint = [wall.data.c[0], wall.data.c[1]];
                 newEndpoint = [update.c[0], update.c[1]];
             }
-            if (wall.c[2] !== update.c[2] || wall.c[3] !== update.c[3]) {
-                endpoint = [wall.c[2], wall.c[3]];
+            if (wall.data.c[2] !== update.c[2] || wall.data.c[3] !== update.c[3]) {
+                endpoint = [wall.data.c[2], wall.data.c[3]];
                 newEndpoint = [update.c[2], update.c[3]];
             }
             // Check for wall segments completely within the offset including the one being moved to delete if needed
-            const smallWalls = scene.data.walls.filter(w => (offset > 0 && w.c[0] > endpoint[0] - offset && w.c[0] < endpoint[0] + offset && w.c[1] > endpoint[1] - offset && w.c[1] < endpoint[1] + offset) && (offset > 0 && w.c[2] > endpoint[0] - offset && w.c[2] < endpoint[0] + offset && w.c[3] > endpoint[1] - offset && w.c[3] < endpoint[1] + offset));
+            const smallWalls = scene.data.walls.filter(w => (offset > 0 && w.data.c[0] > endpoint[0] - offset && w.data.c[0] < endpoint[0] + offset && w.data.c[1] > endpoint[1] - offset && w.data.c[1] < endpoint[1] + offset) && (offset > 0 && w.data.c[2] > endpoint[0] - offset && w.data.c[2] < endpoint[0] + offset && w.data.c[3] > endpoint[1] - offset && w.data.c[3] < endpoint[1] + offset));
             if (smallWalls.length > 0 && del) {
                 let toDelete = [];
                 smallWalls.forEach(small => {
@@ -49,16 +50,16 @@ const MWPM = (() => {
             }
             // Get all other walls on the scene that have an endpoint in the same place as the one we are moving
             // If an offset is provided, also get those walls within the offset
-            const otherWalls = scene.data.walls.filter(w => (w._id !== wall._id && (((w.c[0] === endpoint[0] && w.c[1] === endpoint[1]) || (offset > 0 && w.c[0] > endpoint[0] - offset && w.c[0] < endpoint[0] + offset && w.c[1] > endpoint[1] - offset && w.c[1] < endpoint[1] + offset)) || ((w.c[2] === endpoint[0] && w.c[3] === endpoint[1]) || (offset > 0 && w.c[2] > endpoint[0] - offset && w.c[2] < endpoint[0] + offset && w.c[3] > endpoint[1] - offset && w.c[3] < endpoint[1] + offset)))));
+            const otherWalls = scene.data.walls.filter(w => (w._id !== wall._id && (((w.data.c[0] === endpoint[0] && w.data.c[1] === endpoint[1]) || (offset > 0 && w.data.c[0] > endpoint[0] - offset && w.data.c[0] < endpoint[0] + offset && w.data.c[1] > endpoint[1] - offset && w.data.c[1] < endpoint[1] + offset)) || ((w.data.c[2] === endpoint[0] && w.data.c[3] === endpoint[1]) || (offset > 0 && w.data.c[2] > endpoint[0] - offset && w.data.c[2] < endpoint[0] + offset && w.data.c[3] > endpoint[1] - offset && w.data.c[3] < endpoint[1] + offset)))));
             let updates = [];
             otherWalls.forEach(other => {
                 let coords = [];
                 // Check both ends to see if they match and push matching end coords to updates
-                if ((other.c[0] === endpoint[0] && other.c[1] === endpoint[1]) || (offset > 0 && other.c[0] > endpoint[0] - offset && other.c[0] < endpoint[0] + offset && other.c[1] > endpoint[1] - offset && other.c[1] < endpoint[1] + offset)) {
-                    coords = [newEndpoint[0], newEndpoint[1], other.c[2], other.c[3]];
+                if ((other.data.c[0] === endpoint[0] && other.data.c[1] === endpoint[1]) || (offset > 0 && other.data.c[0] > endpoint[0] - offset && other.data.c[0] < endpoint[0] + offset && other.data.c[1] > endpoint[1] - offset && other.data.c[1] < endpoint[1] + offset)) {
+                    coords = [newEndpoint[0], newEndpoint[1], other.data.c[2], other.data.c[3]];
                 }
-                if ((other.c[2] === endpoint[0] && other.c[3] === endpoint[1]) || (offset > 0 && other.c[2] > endpoint[0] - offset && other.c[2] < endpoint[0] + offset && other.c[3] > endpoint[1] - offset && other.c[3] < endpoint[1] + offset)) {
-                    coords = [other.c[0], other.c[1], newEndpoint[0], newEndpoint[1]];
+                if ((other.data.c[2] === endpoint[0] && other.data.c[3] === endpoint[1]) || (offset > 0 && other.data.c[2] > endpoint[0] - offset && other.data.c[2] < endpoint[0] + offset && other.data.c[3] > endpoint[1] - offset && other.data.c[3] < endpoint[1] + offset)) {
+                    coords = [other.data.c[0], other.data.c[1], newEndpoint[0], newEndpoint[1]];
                 }
                 updates.push({
                     _id: other._id,
@@ -76,10 +77,10 @@ const MWPM = (() => {
         Hooks.on("hoverWall", async (wall, hover) => {
             await hookOnHoverWall(wall, hover);
         });
-        Hooks.on("preUpdateWall", async (scene, wall, update) => {
+        Hooks.on("preUpdateWall", async (wall, update) => {
             // Don't fire hook function if an update is already happening
             if (!updating) {
-                await hookOnpreUpdateWall(scene, wall, update);
+                await hookOnpreUpdateWall(wall, update);
             }
         });
     });
