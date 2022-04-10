@@ -3,7 +3,7 @@
 	"title": "Multiple Wall Point Mover (MWPM)",
 	"author": "Reaver01",
 	"description": "Move endpoints of walls that reside on the same point.",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"minimumCoreVersion": "9.0",
     "compatibleCoreVersion": "9.266",
 	"scripts": ["./mwpm.js"],
