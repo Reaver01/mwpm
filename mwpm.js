@@ -44,13 +44,13 @@ const MWPM = (() => {
             if (smallWalls.length > 0 && del) {
                 let toDelete = [];
                 smallWalls.forEach(small => {
-                    toDelete.push(small._id);
+                    toDelete.push(small.id);
                 });
                 await scene.deleteEmbeddedEntity("Wall", toDelete);
             }
             // Get all other walls on the scene that have an endpoint in the same place as the one we are moving
             // If an offset is provided, also get those walls within the offset
-            const otherWalls = scene.data.walls.filter(w => (w._id !== wall._id && (((w.data.c[0] === endpoint[0] && w.data.c[1] === endpoint[1]) || (offset > 0 && w.data.c[0] > endpoint[0] - offset && w.data.c[0] < endpoint[0] + offset && w.data.c[1] > endpoint[1] - offset && w.data.c[1] < endpoint[1] + offset)) || ((w.data.c[2] === endpoint[0] && w.data.c[3] === endpoint[1]) || (offset > 0 && w.data.c[2] > endpoint[0] - offset && w.data.c[2] < endpoint[0] + offset && w.data.c[3] > endpoint[1] - offset && w.data.c[3] < endpoint[1] + offset)))));
+            const otherWalls = scene.data.walls.filter(w => (w.id !== wall.id && (((w.data.c[0] === endpoint[0] && w.data.c[1] === endpoint[1]) || (offset > 0 && w.data.c[0] > endpoint[0] - offset && w.data.c[0] < endpoint[0] + offset && w.data.c[1] > endpoint[1] - offset && w.data.c[1] < endpoint[1] + offset)) || ((w.data.c[2] === endpoint[0] && w.data.c[3] === endpoint[1]) || (offset > 0 && w.data.c[2] > endpoint[0] - offset && w.data.c[2] < endpoint[0] + offset && w.data.c[3] > endpoint[1] - offset && w.data.c[3] < endpoint[1] + offset)))));
             let updates = [];
             otherWalls.forEach(other => {
                 let coords = [];
@@ -62,11 +62,12 @@ const MWPM = (() => {
                     coords = [other.data.c[0], other.data.c[1], newEndpoint[0], newEndpoint[1]];
                 }
                 updates.push({
-                    _id: other._id,
+                    _id: other.id,
                     c: coords
                 });
             });
-            await scene.updateEmbeddedEntity("Wall", updates);
+            console.log(updates)
+            await scene.updateEmbeddedDocuments("Wall", updates);
             // Reset updating variable
             updating = false;
         }
