@@ -46,7 +46,7 @@ const MWPM = (() => {
                 smallWalls.forEach(small => {
                     toDelete.push(small.id);
                 });
-                await scene.deleteEmbeddedEntity("Wall", toDelete);
+                await scene.deleteEmbeddedDocuments("Wall", toDelete);
             }
             // Get all other walls on the scene that have an endpoint in the same place as the one we are moving
             // If an offset is provided, also get those walls within the offset
